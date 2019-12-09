@@ -20,16 +20,17 @@ for i = 1:(Cycles)
 	end
 Ron = Ron';	%not R but I
 Roff = Roff';
-dy = diff(data);
+dy = diff(data)*10;	%/0.1 make true derivative
+dy2 = diff(dy)*10;
 
 for j = 1:Cycles
 	dy_test = 0;
+	Vset(j) = 0;
+	
 	for i = 3 + (Cycle_points * (j-1)) : ((Negative_up_to *-10)+1) + (Cycle_points * (j-1))
-		temp = dy(i);
-		if temp < dy_test
-			dy_test = temp;
-	%		Vset(j) = x(i-2);
-			Vset(j) = x(i-0 - (Cycle_points * (j-1)));
+		if dy2(i) <= -0.008
+			Vset(j) = x(i+1 - (Cycle_points * (j-1)));
+			break
 		end
 	end
 end
@@ -37,13 +38,15 @@ Vset = Vset';
 
 for j = 1:Cycles
 	dy_test = 0;
+	Vreset(j) = 0;
 	for i = 3 + ((Negative_up_to *-20)+1) + (Cycle_points * (j-1)) : ((Negative_up_to *-20)+1) + (Positive_up_to*10) + (Cycle_points * (j-1)) -1
 		temp = dy(i);
 		if temp < dy_test
 			dy_test = temp;
-	%		Vreset(j) = x(i-2);
 			Vreset(j) = x(i-0 - (Cycle_points * (j-1)));
 		end
 	end
 end
 Vreset = Vreset';
+
+%histogram(Vreset(1:50),25)
